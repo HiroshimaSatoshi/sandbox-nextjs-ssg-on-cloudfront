@@ -1,16 +1,16 @@
 import { CloudFrontRequestEvent, Callback } from 'aws-lambda';
 export const handler = (event: CloudFrontRequestEvent, _: unknown, callback: Callback) => {
-  console.log('start');
   const request = event.Records[0].cf.request;
-  console.log('event', event.Records[0].cf.request);
   const { uri } = request;
 
+  /** root/サブディレクトリで指定がなければindex.htmlを見る */
   if (uri.endsWith('/')) {
     request.uri += 'index.html';
   } else if (!uri.includes('.')) {
+    // subFolderは作らないのでパスに拡張子をつける
     request.uri += '.html';
   }
-  console.log('request', request);
+
   callback(null, request);
   return;
 };
